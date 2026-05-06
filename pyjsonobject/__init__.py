@@ -1,6 +1,6 @@
-"""PyJsonObject package."""
+from .json_key_path import *
+from .exceptions import *
+from .json_object import *
+from .__init__ import *
 
-from .json_object import JsonObject
-
-__all__ = ["JsonObject"]
-__version__ = "0.1.0"
+__version__ = "0.1.1"
