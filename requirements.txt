@@ -1,0 +1,3 @@
+kingkybel-pyflashlogger>=2.5.0
+kingkybel-pyfundamentals>=0.4.5
+

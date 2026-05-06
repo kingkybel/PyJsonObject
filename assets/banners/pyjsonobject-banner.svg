@@ -1,0 +1,32 @@
+<svg width="1600" height="400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PyJsonObject banner">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1220"/>
+      <stop offset="55%" stop-color="#13243A"/>
+      <stop offset="100%" stop-color="#1B3555"/>
+    </linearGradient>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#30C4D1"/>
+      <stop offset="100%" stop-color="#0EA5A3"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="400" fill="url(#bgGradient)"/>
+  <circle cx="165" cy="380" r="290" fill="#30C4D1" fill-opacity="0.10"/>
+  <circle cx="1450" cy="35" r="180" fill="#FFFFFF" fill-opacity="0.06"/>
+
+  <g transform="translate(110, 168)">
+    <text font-family="Segoe UI, Arial, sans-serif" font-size="92" font-weight="700" fill="#F8FAFC">PyJsonObject</text>
+    <text y="70" font-family="Segoe UI, Arial, sans-serif" font-size="34" fill="#A5F3FC">Python nested JSON access and mutation library</text>
+  </g>
+
+  <g transform="translate(1300, 200)">
+    <circle r="155" fill="#0F1C2E" stroke="#3BD6E0" stroke-width="5"/>
+    <rect x="-105" y="-118" width="210" height="236" rx="18" fill="url(#cardGradient)" fill-opacity="0.20" stroke="#67E8F9" stroke-width="4"/>
+    <text x="0" y="-58" text-anchor="middle" font-family="Consolas, Monaco, monospace" font-size="34" font-weight="700" fill="#E0FBFF">{</text>
+    <text x="-75" y="-10" font-family="Consolas, Monaco, monospace" font-size="18" fill="#E0FBFF">"lang": "py",</text>
+    <text x="-75" y="24" font-family="Consolas, Monaco, monospace" font-size="18" fill="#E0FBFF">"path": "a/b",</text>
+    <text x="-75" y="58" font-family="Consolas, Monaco, monospace" font-size="18" fill="#E0FBFF">"ok": true</text>
+    <text x="0" y="98" text-anchor="middle" font-family="Consolas, Monaco, monospace" font-size="34" font-weight="700" fill="#E0FBFF">}</text>
+  </g>
+</svg>
