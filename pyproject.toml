@@ -22,7 +22,10 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 keywords = ["json", "object", "utilities"]
-dependencies = []
+dependencies = [
+    "kingkybel-pyflashlogger>=2.5.0",
+    "kingkybel-pyfundamentals>=0.4.6",
+]
 
 [project.optional-dependencies]
 dev = ["pytest", "black", "mypy"]

@@ -2,135 +2,149 @@
 
 # PyJsonObject
 
-`PyJsonObject` is a Python library for reading and modifying nested JSON values using slash-separated key paths.
-It is the Python counterpart of the C++ `JsonObject` library and follows the same core usage model.
+`PyJsonObject` is a Python library for reading and updating nested JSON values via slash-separated key paths.
 
-## What this repository contains
+## Features
 
-- Core package:
-  - `pyjsonobject/json_object.py`
-  - `pyjsonobject/json_key_path.py`
-  - `pyjsonobject/exceptions.py`
-- Unit tests in `test/`
-- Packaging and build metadata:
-  - `pyproject.toml`
-  - `setup.py`
+- Read nested values with paths like `user/profile/name`
+- Read/write array values with bracket syntax, e.g. `items/[0]/id`
+- Special array tokens:
+  - `[^]` = first element
+  - `[$]` = last element
+- Safe reads with `default=...`
+- Optional `force=True` writes that create/reshape intermediate structures
+- File helpers: `from_file(...)`, `to_file(...)`
 
-## Core capabilities
+## Installation
 
-- Access nested JSON values with string paths like `user/profile/name`
-- Access array items with index keys like `[0]`, `[1]`
-- Use special array symbols:
-  - `[^]` first element (or prepend on `set(..., force=True)`)
-  - `[$]` last element (or append on `set(..., force=True)`)
-- Optional default values for safe reads
-- Optional `force=True` writes to create compatible intermediate containers
-- File I/O helpers:
-  - `from_file(filename)`
-  - `to_file(filename, indent)`
-
-## Path syntax
-
-- Segments are separated by `/`
-- Object keys are plain strings, for example: `settings/theme`
-- Array indices are bracketed, for example: `users/[0]/name`
-- Valid index symbols: `[0]`, `[1]`, ..., `[^]`, `[$]`
-
-## Examples
-
-### 1) Basic get/set
-
-```python
-from pyjsonobject import JsonObject
-
-obj = JsonObject(json_str='{"user":{"name":"Ada","age":36}}')
-
-obj.set("user/name", "Ada Lovelace")
-name = obj.get("user/name")
-```
-
-### 2) Defaults and compatibility checks
-
-```python
-from pyjsonobject import JsonObject
-
-obj = JsonObject(json_str='{"user":{"name":"Ada"}}')
-
-# Missing key in a compatible object path -> returns default
-city = obj.get("user/city", default="unknown")
-
-# Incompatible path still raises an error (object vs array mismatch)
-# obj.get("user/[0]", default="fallback")
-```
-
-### 3) Array operations with special symbols
-
-```python
-from pyjsonobject import JsonObject
-
-arr = JsonObject(json_str='[1,2,3]')
-
-arr.set("[^]", 0, force=True)  # prepend -> [0,1,2,3]
-arr.set("[$]", 4, force=True)  # append  -> [0,1,2,3,4]
-
-first = arr.get("[^]")
-last = arr.get("[$]")
-```
-
-### 4) Force-create intermediate structures
-
-```python
-from pyjsonobject import JsonObject
-
-obj = JsonObject(json_str='{}')
-
-# Without force this raises due to missing path/container
-obj.set("a/[0]/name", "node-0", force=True)
-```
-
-### 5) Using JsonKeyPath directly
-
-```python
-from pyjsonobject import JsonObject
-from pyjsonobject.json_key_path import JsonKeyPath
-
-obj = JsonObject(json_str='{"items":[{"id":7}]}')
-path = JsonKeyPath("items/[0]/id")
-
-value = obj.get(path.key_list())
-```
-
-### 6) Load and write files
-
-```python
-from pyjsonobject import JsonObject
-
-obj = JsonObject()
-obj.from_file("input.json")
-obj.set("meta/version", 2, force=True)
-obj.to_file("output.json", indent=2)
-```
-
-## Install
-
-### From source (editable)
+### Install from source (editable)
 
 ```bash
-cd /home/dkybelksties/Repos/Github/PyJsonObject
 python3 -m pip install -e .
 ```
 
-### Build a wheel
+### Build distribution artifacts
 
 ```bash
-cd /home/dkybelksties/Repos/Github/PyJsonObject
 python3 -m pip install build
 python3 -m build
 ```
 
-## Run tests
+## Requirements
+
+- Python `>=3.8`
+- Runtime dependencies:
+  - `kingkybel-pyflashlogger>=2.5.0`
+  - `kingkybel-pyfundamentals>=0.4.6`
+
+## Path syntax
+
+- Path separator: `/`
+- Object key segment: `config/theme`
+- Array index segment: `users/[0]/name`
+- Supported array selectors: `[0]`, `[1]`, ... `[^]`, `[$]`
+
+## Quick usage
+
+### Basic get/set
+
+```python
+from pyjsonobject import JsonObject
+
+obj = JsonObject(json_str='{"user": {"name": "Ada", "age": 36}}')
+obj.set("user/name", "Ada Lovelace", force=False)
+print(obj.get("user/name"))
+```
+
+### Read with default
+
+```python
+from pyjsonobject import JsonObject
+
+obj = JsonObject(json_obj={"user": {"name": "Ada"}})
+city = obj.get("user/city", default="unknown")
+print(city)  # unknown
+```
+
+### Force-create nested path
+
+```python
+from pyjsonobject import JsonObject
+
+obj = JsonObject(json_str="{}")
+obj.set("a/[0]/name", "node-0", force=True)
+print(obj.get("a/[0]/name"))
+```
+
+### Array prepend/append tokens
+
+```python
+from pyjsonobject import JsonObject
+
+arr = JsonObject(json_str="[]")
+arr.set("[$]", "last", force=True)   # append
+arr.set("[^]", "first", force=True)  # prepend
+
+print(arr.get("[^]"))  # first
+print(arr.get("[$]"))  # last
+```
+
+### Work with files
+
+```python
+from pyjsonobject import JsonObject
+
+obj = JsonObject(filename="input.json")
+obj.set("meta/version", 2, force=True)
+obj.to_file("output.json", indent=2)
+```
+
+## API overview
+
+- `JsonObject(json_str=None, filename=None, json_obj=None)`
+- `get(keys, default=None)`
+- `set(keys, value, force=False, dryrun=False)`
+- `update(keys, mapping, force=False, deep=False, dryrun=False)`
+- `delete(keys, silent=False, dryrun=False)`
+- `key_exists(keys)`
+- `get_many(paths, default=None)`
+- `from_string(json_str)` / `from_object(obj)` / `from_file(filename)`
+- `to_str(indent=2)` / `to_file(filename, indent=4, dryrun=False)`
+- `get_json()` / `to_dict()` / `copy()`
+- `JsonObject.assert_json_files_valid(paths)`
+
+## Behavior notes
+
+### `force=False` (default)
+
+- The path must already exist and container types must match.
+- Leaf updates only succeed when the existing value type matches the new value type.
+- Type mismatches raise `JsonValueMismatch`.
+
+### `force=True`
+
+- Missing path segments are created as needed.
+- Existing incompatible intermediate containers may be reshaped to satisfy the target path.
+- `[^]` and `[$]` can be used to prepend/append when writing to arrays.
+
+### `update(...)` merge behavior
+
+- `update(..., deep=False)` performs a shallow dict update at the target path.
+- `update(..., deep=True)` recursively merges nested dictionaries.
+- `force=True` allows creation/replacement of the target path with a dict before merge.
+
+## Public typing aliases
+
+The implementation provides explicit aliases in `pyjsonobject.types`:
+
+- `JSONScalar = bool | int | float | str`
+- `JSONValue = JSONScalar | list | dict`
+- `JSONObjectContainer = list | dict`
+
+## Development
+
+Run tests:
 
 ```bash
-cd /home/dkybelksties/Repos/Github/PyJsonObject
 python3 -m pytest -q
 ```
