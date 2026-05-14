@@ -32,7 +32,7 @@ python3 -m build
 
 ## Requirements
 
-- Python `>=3.8`
+- Python `>=3.12`
 - Runtime dependencies:
   - `kingkybel-pyflashlogger>=2.5.0`
   - `kingkybel-pyfundamentals>=0.4.6`
