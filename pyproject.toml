@@ -7,7 +7,7 @@ name = "kingkybel-pyjsonobject"
 dynamic = ["version"]
 description = "Standalone JsonObject helper utilities"
 readme = "README.md"
-license = "GPL-2.0-only"
+license = { text = "GPL-2.0-only" }
 requires-python = ">=3.8"
 authors = [
     {name = "Dieter J Kybelksties", email = "github@kybelksties.com"}
